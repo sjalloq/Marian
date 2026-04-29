@@ -1,0 +1,25 @@
+From 76da750b46c2d6201567ebd390f5bcf80be804dc Mon Sep 17 00:00:00 2001
+From: Shareef Jalloq <shareef@jalloq.co.uk>
+Date: Wed, 29 Apr 2026 16:34:54 +0100
+Subject: [PATCH] ariane: split static-init of debug 'mode' var
+
+Verilator 5.048 surfaces an IMPLICITSTATIC warning at ariane.sv:936
+because 'byte mode = "";' inside an always_ff block is implicitly
+static (IEEE 1800-2023 6.21). Split the declaration from the
+initialisation so the lifetime is unambiguous and Verilator stops
+warning. No functional change.
+
+diff --git a/src/ariane.sv b/src/ariane.sv
+index ac89e2d13..c26a2a3f9 100644
+--- a/src/ariane.sv
++++ b/src/ariane.sv
+@@ -933,7 +933,8 @@ module ariane import ariane_pkg::*; #(
+     if (~rst_ni) begin
+       cycles <= 0;
+     end else begin
+-      byte mode = "";
++      byte mode;
++      mode = "";
+       if (debug_mode) mode = "D";
+       else begin
+         case (priv_lvl)

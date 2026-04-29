@@ -55,3 +55,6 @@
 [submodule "ips/bow_common_ips/ips/axi_mem_if"]
 	path = ips/bow_common_ips/ips/axi_mem_if
 	url = https://github.com/pulp-platform/axi_mem_if.git
+[submodule "ips/opentitan"]
+	path = ips/opentitan
+	url = https://github.com/lowrisc/opentitan

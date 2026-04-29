@@ -447,11 +447,12 @@ module ara_sequencer import ara_pkg::*; import rvv_pkg::*; import cf_math_pkg::i
               ara_req_ready_o = 1'b0;
               pe_req_valid_d  = 1'b0;
             end else begin
+              automatic vfu_e ara_req_vfu = get_vfu(ara_req_i.op);
               // Acknowledge instruction
               ara_req_ready_o = 1'b1;
 
               // Remember that the vector instruction is running
-              unique case (get_vfu(ara_req_i.op))
+              unique case (ara_req_vfu)
                 VFU_LoadUnit   : pe_vinsn_running_d[NrLanes + OffsetLoad][vinsn_id_n]   = 1'b1;
                 VFU_StoreUnit  : pe_vinsn_running_d[NrLanes + OffsetStore][vinsn_id_n]  = 1'b1;
                 VFU_SlideUnit  : pe_vinsn_running_d[NrLanes + OffsetSlide][vinsn_id_n]  = 1'b1;
