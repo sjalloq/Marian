@@ -3119,6 +3119,56 @@ module ara_dispatcher
 
           end
 
+          //////////////////////////////
+          //  Custom-0: AV1 vector op //
+          //////////////////////////////
+
+          // Marian-local extensions live under OpcodeCustom0 (0x0B). The
+          // sub-encoding mirrors RVV's vector format so we reuse the
+          // vcrypto_type field accessors.
+          riscv::OpcodeCustom0: begin
+
+            automatic rvv_instruction_t insn = rvv_instruction_t'(acc_req_i.insn.instr);
+
+            // Single-cycle response, like the crypto ops.
+            acc_resp_valid_o = 1'b1;
+
+            unique case (insn.vcrypto_type.func6)
+
+              F6_AV1_IDCT4: begin // av1.idct4 vd, vs2
+
+                ara_req_d.scalar_op     = '0;
+                ara_req_d.use_scalar_op = 1'b0;
+                ara_req_d.vs1           = '0;
+                ara_req_d.use_vs1       = 1'b0;
+                ara_req_d.vs2           = insn.vcrypto_type.rs2;
+                ara_req_d.use_vs2       = 1'b1;
+                ara_req_d.vd            = insn.vcrypto_type.rd;
+                ara_req_d.use_vd        = 1'b1;
+                ara_req_d.vm            = insn.vcrypto_type.vm;
+                ara_req_valid_d         = 1'b1;
+                ara_req_d.op            = ara_pkg::VAV1_IDCT4;
+                ara_req_d.cvt_resize    = CVT_SAME;
+
+                // POC constraints: SEW must be 16, vl must be a multiple
+                // of 16 (one 4x4 row-pass per call). vstart must be 0.
+                if (vtype_q.vsew != EW16) illegal_insn = 1'b1;
+                if (ara_req_d.vl[3:0]   != 4'b0) illegal_insn = 1'b1;
+                if (ara_req_d.vstart    != '0)   illegal_insn = 1'b1;
+
+              end
+
+              default: begin
+                illegal_insn = 1'b1;
+              end
+
+            endcase
+
+            // Instruction is invalid if the vtype is invalid
+            if (vtype_q.vill) illegal_insn = 1'b1;
+
+          end
+
           ////////////////////
           //  Vector Loads  //
           ////////////////////

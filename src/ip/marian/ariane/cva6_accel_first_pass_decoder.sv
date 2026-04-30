@@ -150,6 +150,13 @@ import rvv_pkg::*; (
       riscv::OpcodeCryptoVec: begin
         is_accel_o = 1'b1;
       end
+
+      // OP-CUSTOM-0 (0x0B): Marian-local AV1 vector extensions.
+      // Same RVV-shaped encoding (vs2/vd/vm fields) so the dispatcher can
+      // reuse vcrypto_type accessors. No scalar-register dependencies in v0.
+      riscv::OpcodeCustom0: begin
+        is_accel_o = 1'b1;
+      end
     endcase
   end
 

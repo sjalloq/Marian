@@ -162,6 +162,9 @@ module operand_collector
           operand_active_s = 3'b011; // vs2 + vd active
           scalar_d = pe_crypto_req_i.scalar_op[7:0];
         end
+        VAV1_IDCT4: begin
+          operand_active_s = 3'b001; // vs2 only — single-source transform
+        end
         default: begin
           operand_active_s = 3'b000;
         end

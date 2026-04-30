@@ -192,7 +192,9 @@ package ara_pkg;
     // SM4 (vec-scalar)
     VSM4R_VS,
     // SM3
-    VSM3ME, VSM3C
+    VSM3ME, VSM3C,
+    // AV1 inverse transforms (Pattern-B decoupled unit)
+    VAV1_IDCT4
   } ara_op_e;
 
   // Return true if op is a load operation

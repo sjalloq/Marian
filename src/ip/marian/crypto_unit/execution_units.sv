@@ -72,6 +72,7 @@ import ara_pkg::*;
   logic [EGW128-1:0] sm_encdec_result_s;
   logic [EGW256-1:0] sm3_msg_expn_words_o;
   logic [EGW256-1:0] sm3_compression_o;
+  logic [EGW256-1:0] idct4_result_s;
 
 
   pe_crypto_req_t    pe_crypto_req_d, pe_crypto_req_q;
@@ -176,6 +177,14 @@ import ara_pkg::*;
               crypto_result_d[EGW128-1:0] = gcm_result_s;
             end
 
+          end else if (pe_crypto_req_d.op == VAV1_IDCT4) begin
+
+            crypto_result_d = idct4_result_s;
+            // ack current argument
+            arg_ready_s    = 1'b1;
+            // indicate result is available next cycle
+            result_valid_d = 1'b1;
+
           end
 
           // Move to EXEC to wait for handshaking
@@ -271,6 +280,14 @@ import ara_pkg::*;
                 if (gcm_result_valid_s == 1'b1) begin
                   crypto_result_d[EGW128-1:0] = gcm_result_s;
                 end
+
+              end else if (pe_crypto_req_d.op == VAV1_IDCT4) begin
+
+                crypto_result_d = idct4_result_s;
+                // ack current argument
+                arg_ready_s    = 1'b1;
+                // indicate result is available next cycle
+                result_valid_d = 1'b1;
 
               end
 
@@ -394,6 +411,16 @@ sm3 i_sm3 (
   //msg expansion
   .msg_exp_words_o(sm3_msg_expn_words_o)
 );
+
+/*************
+ * AV1 IDCT4 *
+ *************/
+
+  idct4 i_idct4 (
+    .crypto_args_buff_i ( crypto_args_buff_i ),
+    .pe_crypto_req_i    ( pe_crypto_req_i    ),
+    .idct4_result_o     ( idct4_result_s     )
+  );
 
 /**************
  * ASSERTIONS *

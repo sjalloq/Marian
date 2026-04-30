@@ -214,7 +214,7 @@ module ara_sequencer import ara_pkg::*; import rvv_pkg::*; import cf_math_pkg::i
       [VSE:VSXE]           : get_vfu = VFU_StoreUnit;
       [VSLIDEUP:VSLIDEDOWN]: get_vfu = VFU_SlideUnit;
       [VMVXS:VFMVFS]       : get_vfu = VFU_None;
-      [VAESK1:VSM3C]       : get_vfu = VFU_CryptoUnit;
+      [VAESK1:VAV1_IDCT4]  : get_vfu = VFU_CryptoUnit;
     endcase
   endfunction : get_vfu
 
@@ -254,7 +254,7 @@ module ara_sequencer import ara_pkg::*; import rvv_pkg::*; import cf_math_pkg::i
       [VMVXS:VFMVFS]:
         for (int i = 0; i < NrVFUs; i++)
           if (i == VFU_None) target_vfus[i] = 1'b1;
-      [VAESK1:VSM3C]:
+      [VAESK1:VAV1_IDCT4]:
         for (int i = 0; i < NrVFUs; i++)
           if (i == VFU_CryptoUnit) target_vfus[i] = 1'b1;
     endcase

@@ -95,6 +95,14 @@ package rvv_pkg;
     F6_VSHA2CL  = 6'b101111
   } opcodevcrypto_func6_e;
 
+  // Func6 values for AV1 / Marian-local extensions under OpcodeCustom0 (0x0B).
+  // Marian-local sub-encoding mirrors RVV's vector format:
+  //   [funct6][vm][vs2][vs1][funct3][vd][opcode=0001011]
+  // funct3 is 3'b000 (OPIVV-style) for all custom-0 ops in v0.
+  typedef enum logic [5:0] {
+    F6_AV1_IDCT4 = 6'b000000  // av1.idct4 vd, vs2  — 1-D 4-point IDCT-II
+  } opcodecustom0_func6_e;
+
   // vs1 values for vector crypto instructions under OpcodeCryptoVec
   typedef enum logic [4:0] {
     VAESDM_VS1 = 5'b00000,

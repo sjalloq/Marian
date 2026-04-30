@@ -191,6 +191,7 @@ src/ip/marian/crypto_unit/aes.sv
 src/ip/marian/crypto_unit/crypto_unit.sv
 src/ip/marian/crypto_unit/execution_units.sv
 src/ip/marian/crypto_unit/gcm.sv
+src/ip/marian/crypto_unit/idct4.sv
 src/ip/marian/crypto_unit/operand_collector.sv
 src/ip/marian/crypto_unit/sha.sv
 src/ip/marian/crypto_unit/sm3.sv
